@@ -1,20 +1,19 @@
 <template>
-  <div id="connection" >
-    <label>Connection : </label>
+  <div id="create_account" >
+    <label>Create an account : </label>
+    <label for="name"> name : </label>
+    <input type="text" name="name" v-model="name">
     <label for="login"> login : </label>
     <input type="text" name="login" v-model="login">
     <label for="password"> password : </label>
     <input type="text" name="password" v-model="password">
-    <button @click.prevent="submit_login()">Connection</button>
-  </div>
-  <div id="signup">
-    <router-link to="/Create_account">Create an account</router-link>
+    <button @click.prevent="submit_create_account()">Submit</button>
   </div>
 </template>
 
 <script>
 export default {
-        name: 'Login',
+        name: 'Create_account',
         components: {
         },
         data() {
@@ -25,10 +24,8 @@ export default {
             }
         },
         methods: {
-            submit_login() {
-                if ((this.login != '')&&(this.password != '')) {
-                    console.log("connection");
-                }
+            submit_create_account() {
+                
             }
         },
         computed: {
