@@ -1,9 +1,9 @@
 <template>
     <div id="sidebar">
-        <label>{{name}}</label>
+        <label id="sidebar-title" v-on:click="switchShowText" >{{name}}</label>
         <ul>
             <li v-for="todo in todos" :key="todo.id">
-                <listask :id="todo.id" :completed="todo.completed" :task="todo.name"></listask>
+                <listask v-show="showText" :id="todo.id" :completed="todo.completed" :task="todo.name"></listask>
             </li>
         </ul>
     </div>
@@ -19,6 +19,7 @@
         },
         data() {
             return {
+                showText:true,
                 todos: [
                     {
                         id: 1,
@@ -53,6 +54,18 @@
             todo(){
                 return this.data()[this.id]
             }
+        },
+        methods:{
+            switchShowText(){
+                this.showText = this.showText?false:true
+            }
         }
     }
 </script>
+
+<style>
+label{width: 200px; height:30px; }
+label:hover{ color: red; border: 1px solid black; padding: 3px; border-radius: 3px;}
+#sidebar-title {text-align: center;}
+#sidebar {display:grid; grid-template-columns: 1fr 2fr;}
+</style>

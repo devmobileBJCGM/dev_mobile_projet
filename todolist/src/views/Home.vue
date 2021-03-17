@@ -1,6 +1,6 @@
 <template>
+    <h1>Bienvenue dans la list des Todos</h1>
     <div id="Todo" >
-        <h1>Bienvenue dans la list des Todos</h1>
         <ul>
             <li v-for="elem_list_todo in list_todos" :key="elem_list_todo.id">
                 <todolist :id="elem_list_todo.id" :completed="elem_list_todo.completed" :name="elem_list_todo.name"></todolist>
@@ -48,3 +48,7 @@ export default {
         }
     }
 </script>
+
+<style>
+#Todo {width: 60%; margin: 0 auto;}
+</style>
