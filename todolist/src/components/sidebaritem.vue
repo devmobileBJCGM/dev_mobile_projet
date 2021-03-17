@@ -9,10 +9,6 @@
 export default {
         name: 'task',
         
-        data(){
-            return {
-            }
-        },
         props:{
            id: {type: Number},
            completed: {type: Boolean},
