@@ -1,21 +1,14 @@
 <template>
     <div id="sidebar">
-        <label id="sidebar-title" v-on:click="switchShowText" >{{name}}</label>
-        <ul>
-            <li v-for="todo in todos" :key="todo.id">
-                <listask v-show="showText" :id="todo.id" :completed="todo.completed" :task="todo.name"></listask>
-            </li>
-        </ul>
+        <label id="sidebar-title" >{{name}}</label>
     </div>
 </template>
 <script>
     import { mapGetters } from "vuex";
-    import listask from '@/components/sidebaritem.vue';
     
     export default {
         name: 'sidebar',
         components: {
-            listask
         },
         data() {
             return {
@@ -56,16 +49,11 @@
             }
         },
         methods:{
-            switchShowText(){
-                this.showText = this.showText?false:true
-            }
         }
     }
 </script>
 
 <style>
-label{width: 200px; height:30px; }
-label:hover{ color: red; border: 1px solid black; padding: 3px; border-radius: 3px;}
-#sidebar-title {text-align: center;}
-#sidebar {display:grid; grid-template-columns: 1fr 2fr;}
+label{width: 200px; height:30px;}
+label:hover{ color: red; background-color: red;}
 </style>
