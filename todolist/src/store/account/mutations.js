@@ -1,4 +1,4 @@
-export function load(state, data) {
+export function connexion(state, data) {
     console.log(data);
-    state.properties = data
+    state.token = data["token"];
 }

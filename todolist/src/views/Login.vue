@@ -1,11 +1,11 @@
 <template>
   <div id="connection" >
     <label>Connection : </label>
-    <label for="login"> login : </label>
-    <input type="text" name="login" v-model="login">
+    <label for="emailAdresse"> email : </label>
+    <input type="text" name="emailAdresse" v-model="emailAdresse">
     <label for="password"> password : </label>
     <input type="text" name="password" v-model="password">
-    <button @click.prevent="submit_login()">Connection</button>
+    <button @click.prevent="submit_login">Connection</button>
   </div>
   <div id="signup">
     <router-link to="/Create_account">Create an account</router-link>
@@ -13,39 +13,31 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+    
 export default {
         name: 'Login',
         components: {
         },
         data() {
             return {
-                login: '',
+                emailAdresse: '',
                 password: '',
                 name: '',
             }
         },
         methods: {
+            ...mapActions("account",['login']),
             submit_login() {
-                if ((this.login != '')&&(this.password != '')) {
+              console.log("submit");
+                if ((this.emailAdresse != '')&&(this.password != '')) {
                     console.log("connection");
+                    this.login({"email":this.emailAdresse,"password":this.password})
                 }
             }
         },
         computed: {
+            ...mapGetters("account",['accounts'])
         }
     }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-ul {
-  list-style-type: none;
-}
-</style>
