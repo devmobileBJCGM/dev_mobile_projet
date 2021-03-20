@@ -7,7 +7,7 @@
         <div id="List_todo">
             <ul>
                 <li v-for="elem_list_todo in getTodolist" :key="elem_list_todo.id"  v-on:click="selectTodoList(elem_list_todo.id)">
-                    <todolist :id="elem_list_todo.id" :completed="elem_list_todo.completed" :name="elem_list_todo.name"></todolist>
+                    <todolist :id="elem_list_todo.id" :name="elem_list_todo.name"></todolist>
                     <button @click.prevent="deleteTodolist(elem_list_todo.id)">.</button>
                 </li>
             </ul>
@@ -19,9 +19,11 @@
             <ul>
                 <li v-for="todo in getTodotask" :key="todo.id" :style="colorStyle(todo.completed)">
                     <div>
-                        <input type="checkbox" v-model="todo.completed" >
-                        <button @click.prevent="deleteTodoElement(filteredTodos,todo)">.</button>
-                        <listask :id="todo.id" :completed="todo.completed" :task="todo.name"></listask>
+                        <input type="checkbox" v-model="todo.completed" v-on:click="changeBool(todo)">
+                        <button @click.prevent="deleteTodoElement(todo.id)">.</button>
+                        <input type="text" name="modifyTodoName" v-model="modifyTodoName">
+                        <button @click.prevent="modifyTodoNameAction(todo)">change nom</button>
+                        <listask :id="todo.id" :completed="todo.completed==1?true:false" :task="todo.name"></listask>
                     </div>
                 </li>
             </ul>
@@ -52,11 +54,11 @@ export default {
                 newTodoListName: '',
                 newTodoName: '',
                 currentUser: '',
-                currentListTask: [],
+                modifyTodoName: ''
             }
         },
         methods: {
-            ...mapActions("todolist",['getUser','getUserTodolist','getUserTodoInTodolist','creatUserTodolist','deleteUserTodolist','creatUserTodoInTodolist']),
+            ...mapActions("todolist",['getUser','getUserTodolist','getUserTodoInTodolist','creatUserTodolist','deleteUserTodolist','creatUserTodoInTodolist','deleteUserTodoInTodolist','changeCompleteTodoInTodolist','modifyTodoInTodolist']),
             submit_getUserData(){
                 if (this.connected) {
                     this.getUser({"token":this.getUserToken});
@@ -84,12 +86,18 @@ export default {
                     this.newTodoName = '';
                 }
             },
-            deleteTodoElement(list,elem){
-                let index = list.indexOf(elem);
-                list.splice(index, 1);
+            deleteTodoElement(id){
+                this.deleteUserTodoInTodolist({"id":id,"token":this.getUserToken});
             },
             colorStyle(bool) {
                 return [ bool ? "color:green" : "color:red"];
+            },
+            changeBool(todo){
+                todo.completed = todo.completed? false:true;
+                this.changeCompleteTodoInTodolist({"id":todo.id,"name":todo.name,"completed":todo.completed?1:0,"todolistid":this.idTodoSelected,"token":this.getUserToken});
+            },
+            modifyTodoNameAction(todo){
+                this.modifyTodoInTodolist({"id":todo.id,"name":this.modifyTodoName,"completed":todo.completed?1:0,"todolistid":this.idTodoSelected,"token":this.getUserToken});
             }
         },
         computed: {

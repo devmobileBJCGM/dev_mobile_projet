@@ -1,7 +1,5 @@
 <template>
-    <div id="sidebar">
-        <label id="sidebar-title" >{{name}}</label>
-    </div>
+        <label>{{name}}</label>
 </template>
 <script>
     
@@ -11,7 +9,6 @@
         },
         props: {
             id: {type: Number, default: 1},
-            completed: {type: Boolean},
             name: {type: String}
         },
     }

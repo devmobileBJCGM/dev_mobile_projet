@@ -42,3 +42,24 @@ export function creatUserTodoInTodolist({ commit }, values){
                 commit("creatUserTodoInTodolist", response.data);
             })
 }
+
+export function deleteUserTodoInTodolist({ commit }, values){
+    axios.delete('http://138.68.74.39/api/todo/'+values["id"],{headers: {'Authorization': 'Bearer '+values["token"]}})
+            .then(response => {
+                commit("deleteTodoInTodolist", response.data);
+            })
+}
+
+export function changeCompleteTodoInTodolist({ commit }, values){
+    axios.post('http://138.68.74.39/api/completeTodo/'+values["id"]+'?name='+values["name"]+'&completed='+values["completed"]+'&todolist_id='+values["todolistid"],null,{headers: {'Authorization': 'Bearer '+values["token"]}})
+            .then(response => {
+                commit("changeCompleteTodo", response.data);
+            })
+}
+
+export function modifyTodoInTodolist({ commit }, values){
+    axios.patch('http://138.68.74.39/api/todo/'+values["id"]+'?name='+values["name"]+'&completed='+values["completed"]+'&todolist_id='+values["todolistid"],null,{headers: {'Authorization': 'Bearer '+values["token"]}})
+            .then(response => {
+                commit("modifyTodo", response.data);
+            })
+}

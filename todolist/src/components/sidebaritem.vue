@@ -11,7 +11,7 @@ export default {
         
         props:{
            id: {type: Number},
-           completed: {type: Number},
+           completed: {type: Boolean},
            task: {type: String}
         }
 }   
