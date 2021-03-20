@@ -24,3 +24,20 @@ export function creatUserTodoInTodolist(state, data){
     console.log("createtododata "+data);
     state.test = data;
 }
+
+
+export function deleteTodoInTodolist(state, data){
+    console.log("deletetododata "+data);
+    state.test = data;
+}
+
+export function changeCompleteTodo(state, data){
+    console.log("changetododata "+data);
+    state.test = data;
+}
+
+
+export function modifyTodo(state, data){
+    console.log("modifytododata "+data);
+    state.test = data;
+}
