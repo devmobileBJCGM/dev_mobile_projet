@@ -1,11 +1,14 @@
 <template>
     <h1>Bienvenue dans la list des Todos</h1>
+    <button @click.prevent="submit_getUserData">Charger vos données</button>
+    <p v-if="!connected">Vous devez vous connecter</p>
+    <p v-if="connected ">Bonjour {{user}}</p>
     <div id="Todo" >
         <div id="List_todo">
             <ul>
-                <li v-for="elem_list_todo in list_todos" :key="elem_list_todo.id"  v-on:click="selectTodoList(elem_list_todo)">
+                <li v-for="elem_list_todo in getTodolist" :key="elem_list_todo.id"  v-on:click="selectTodoList(elem_list_todo.id)">
                     <todolist :id="elem_list_todo.id" :completed="elem_list_todo.completed" :name="elem_list_todo.name"></todolist>
-                    <button @click.prevent="deleteTodo(elem_list_todo)">.</button>
+                    <button @click.prevent="deleteTodolist(elem_list_todo.id)">.</button>
                 </li>
             </ul>
             <label for="newTodoListName">Todo liste : </label>
@@ -14,7 +17,7 @@
         </div>
         <div id="List_task">
             <ul>
-                <li v-for="todo in filteredTodos" :key="todo.id" :style="colorStyle(todo.completed)">
+                <li v-for="todo in getTodotask" :key="todo.id" :style="colorStyle(todo.completed)">
                     <div>
                         <input type="checkbox" v-model="todo.completed" >
                         <button @click.prevent="deleteTodoElement(filteredTodos,todo)">.</button>
@@ -32,8 +35,11 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 import todolist from '@/components/sidebar.vue';
 import listask from '@/components/sidebaritem.vue';
+
 export default {
         name: 'Todo',
         components: {
@@ -45,164 +51,71 @@ export default {
                 idTodoSelected: 1,
                 newTodoListName: '',
                 newTodoName: '',
-                list_todos: [
-                    {
-                        id: 1,
-                        name: 'List de quentin',
-                        completed: true,
-                        todos: [
-                            {
-                                id: 1,
-                                name: 'je',
-                                completed: true
-                            },
-                            {
-                                id: 2,
-                                name: 'suis',
-                                completed: false
-                            },
-                            {
-                                id: 3,
-                                name: 'une',
-                                completed: false
-                            },
-                            {
-                                id: 4,
-                                name: 'tache',
-                                completed: true
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        name: 'list de paul',
-                        completed: false,
-                        todos: [
-                            {
-                                id: 1,
-                                name: 'moi',
-                                completed: true
-                            },
-                            {
-                                id: 2,
-                                name: 'jen',
-                                completed: false
-                            },
-                            {
-                                id: 3,
-                                name: 'suis',
-                                completed: false
-                            },
-                            {
-                                id: 4,
-                                name: 'une autre',
-                                completed: true
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        name: 'list de paul 2, le quel ?',
-                        completed: false,
-                        todos: [
-                            {
-                                id: 1,
-                                name: 'ah oui',
-                                completed: true
-                            },
-                            {
-                                id: 2,
-                                name: 'bas',
-                                completed: false
-                            },
-                            {
-                                id: 3,
-                                name: 'moi',
-                                completed: false
-                            },
-                            {
-                                id: 4,
-                                name: 'aussi',
-                                completed: true
-                            }
-                        ]
-                    },
-                    {
-                        id: 4,
-                        name: 'LA petite list à hugo',
-                        completed: true,
-                        todos: [
-                            {
-                                id: 1,
-                                name: 'aba',
-                                completed: true
-                            },
-                            {
-                                id: 2,
-                                name: 'daccord',
-                                completed: false
-                            },
-                            {
-                                id: 3,
-                                name: 'on garde',
-                                completed: false
-                            },
-                            {
-                                id: 4,
-                                name: 'espoir',
-                                completed: true
-                            }
-                        ]
-                    }
-                ]
+                currentUser: '',
+                currentListTask: [],
             }
         },
         methods: {
-            selectTodoList(elem){
-                this.idTodoSelected = this.list_todos.indexOf(elem);
+            ...mapActions("todolist",['getUser','getUserTodolist','getUserTodoInTodolist','creatUserTodolist','deleteUserTodolist','creatUserTodoInTodolist']),
+            submit_getUserData(){
+                if (this.connected) {
+                    this.getUser({"token":this.getUserToken});
+                    this.getUserTodolist({"token":this.getUserToken});
+                }
             },
-            deleteTodo(elem){
-                let index = this.list_todos.indexOf(elem);
-                this.list_todos.splice(index, 1);
+            selectTodoList(elem){
+                this.idTodoSelected = elem;
+                console.log(this.idTodoSelected);
+                this.getUserTodoInTodolist({"id":this.idTodoSelected,"token":this.getUserToken});
+            },
+            createTodoList(){
+                if(this.newTodoListName != ''){
+                    this.creatUserTodolist({"name":this.newTodoListName,"token":this.getUserToken});
+                    this.newTodoListName = '';
+                }
+            },
+            deleteTodolist(id){
+                this.deleteUserTodolist({"id":id,"token":this.getUserToken});
                 this.idTodoSelected = -1;
+            },
+            createTodo(){
+                if(this.newTodoName != ''){
+                    this.creatUserTodoInTodolist({"name":this.newTodoName,"completed":0,"todolistid":this.idTodoSelected,"token":this.getUserToken});
+                    this.newTodoName = '';
+                }
             },
             deleteTodoElement(list,elem){
                 let index = list.indexOf(elem);
                 list.splice(index, 1);
-            },
-            createTodoList(){
-                if(this.newTodoListName != ''){
-                    this.list_todos.push( 
-                    {
-                        id: this.list_todos.length+1,
-                        name: this.newTodoListName,
-                        completed: false,
-                        todos: [] 
-                    });
-                    this.newTodoListName ='';
-                }
-            },
-            createTodo(id){
-                if(this.newTodoName != ''){
-                    this.list_todos[id]["todos"].push( 
-                    {
-                        id: this.list_todos[id]["todos"].length+1,
-                        name: this.newTodoName,
-                        completed: false,
-                    });  
-                    this.newTodoName = '';
-                }
             },
             colorStyle(bool) {
                 return [ bool ? "color:green" : "color:red"];
             }
         },
         computed: {
+            ...mapGetters("account",['getAccountToken']),
+            ...mapGetters("todolist",['getAccountUserName','getAccountTodolist','getAccountTodolistTask']),
+            connected(){
+                return this.getAccountToken.length > 0 ? true : false;
+            },
+            getUserToken(){
+                return this.getAccountToken;
+            },
+            user(){
+                return this.getAccountUserName;
+            },
+            getTodolist(){
+                return this.getAccountTodolist;
+            },
             filteredTodos() {
                 if (this.idTodoSelected != -1) {
                     return this.list_todos[this.idTodoSelected]["todos"];
                 }
                 return [];
+            },
+            getTodotask(){
+                console.log(this.getAccountTodolistTask);
+                return this.getAccountTodolistTask;
             }
         }
     }

@@ -2,7 +2,6 @@
   <div>
     <p v-if="!create">Creer votre compte</p>
     <p v-if="create">Compte déjà créé</p>
-    {{this.getAccountToken}}
   </div>
   <div id="create_account" >
     <label for="name"> name : </label>
