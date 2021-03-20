@@ -13,3 +13,7 @@ export function login({ commit }, values){
                 commit("connexion", response.data);
             })
 }
+
+export function logout({ commit }){
+    commit("deconnexion");
+}
