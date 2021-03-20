@@ -1,4 +1,9 @@
 export function connexion(state, data) {
-    console.log(data);
     state.token = data["token"];
+}
+
+export function deconnexion(state) {
+    console.log("deconnexion");
+    state.token = [];
+    state.data = [];
 }

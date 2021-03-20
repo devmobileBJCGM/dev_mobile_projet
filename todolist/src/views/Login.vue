@@ -1,11 +1,18 @@
 <template>
+  <div>
+    <p v-if="!connected">Pas encore connecté</p>
+    <p v-if="connected">Déjà connecté</p>
+  </div>
   <div id="connection" >
     <label>Connection : </label>
     <label for="emailAdresse"> email : </label>
     <input type="text" name="emailAdresse" v-model="emailAdresse">
     <label for="password"> password : </label>
     <input type="text" name="password" v-model="password">
-    <button @click.prevent="submit_login">Connection</button>
+    <button @click.prevent="submit_login">Connexion</button>
+  </div>
+  <div>
+    <button @click.prevent="submit_logout">Deconnexion</button>
   </div>
   <div id="signup">
     <router-link to="/Create_account">Create an account</router-link>
@@ -27,17 +34,21 @@ export default {
             }
         },
         methods: {
-            ...mapActions("account",['login']),
+            ...mapActions("account",['login','logout']),
             submit_login() {
-              console.log("submit");
                 if ((this.emailAdresse != '')&&(this.password != '')) {
-                    console.log("connection");
-                    this.login({"email":this.emailAdresse,"password":this.password})
+                    this.login({"email":this.emailAdresse,"password":this.password});
                 }
+            },
+            submit_logout(){
+                this.logout();
             }
         },
         computed: {
-            ...mapGetters("account",['accounts'])
+            ...mapGetters("account",['getAccountToken']),
+            connected(){
+              return this.getAccountToken.length > 0 ? true : false;
+            }
         }
     }
 </script>

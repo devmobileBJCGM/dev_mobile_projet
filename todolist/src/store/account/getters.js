@@ -1,7 +1,9 @@
-export function accounts(state) {
+export function getAccountToken(state) {
     return state.token;
 }
-
-export function connexion({commit},values){
-    return state.token.find((postman) => postman.name === signup);
+export function getAccountName(state) {
+    return state.name;
+}
+export function getDataAccount(state) {
+    return state.dataAccount;
 }
