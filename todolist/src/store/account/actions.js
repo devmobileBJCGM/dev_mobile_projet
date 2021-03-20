@@ -17,3 +17,4 @@ export function login({ commit }, values){
 export function logout({ commit }){
     commit("deconnexion");
 }
+

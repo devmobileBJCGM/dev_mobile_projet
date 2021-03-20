@@ -3,7 +3,5 @@ export function connexion(state, data) {
 }
 
 export function deconnexion(state) {
-    console.log("deconnexion");
-    state.token = [];
-    state.data = [];
+    state.token = []
 }

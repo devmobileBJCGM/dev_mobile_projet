@@ -4,19 +4,20 @@
     <p v-if="connected">Déjà connecté</p>
   </div>
   <div id="connection" >
-    <label>Connection : </label>
     <label for="emailAdresse"> email : </label>
     <input type="text" name="emailAdresse" v-model="emailAdresse">
     <label for="password"> password : </label>
     <input type="text" name="password" v-model="password">
     <button @click.prevent="submit_login">Connexion</button>
   </div>
-  <div>
+  <div v-if="connected">
     <button @click.prevent="submit_logout">Deconnexion</button>
   </div>
   <div id="signup">
     <router-link to="/Create_account">Create an account</router-link>
   </div>
+  tatatiti@tatatiti.com
+  tatatatatitititi
 </template>
 
 <script>
@@ -38,6 +39,8 @@ export default {
             submit_login() {
                 if ((this.emailAdresse != '')&&(this.password != '')) {
                     this.login({"email":this.emailAdresse,"password":this.password});
+                    this.emailAdresse = '';
+                    this.password = '';
                 }
             },
             submit_logout(){
