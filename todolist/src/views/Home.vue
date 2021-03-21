@@ -1,13 +1,13 @@
 <template>
     <h1>Bienvenue dans la list des Todos</h1>
-    <button @click.prevent="submit_getUserData">Charger vos données</button>
+    <button @click.prevent="submit_getUserData">Recharger vos données</button>
     <p v-if="!connected">Vous devez vous connecter</p>
     <p v-if="connected ">Bonjour {{user}}</p>
     <div id="Todo" >
         <div id="List_todo">
             <ul>
-                <li v-for="elem_list_todo in getTodolist" :key="elem_list_todo.id"  v-on:click="selectTodoList(elem_list_todo.id)">
-                    <todolist :id="elem_list_todo.id" :name="elem_list_todo.name"></todolist>
+                <li v-for="elem_list_todo in getTodolist" :key="elem_list_todo.id"  >
+                    <todolist class="todo" :id="elem_list_todo.id" :name="elem_list_todo.name" v-on:click="selectTodoList(elem_list_todo.id)"></todolist>
                     <button @click.prevent="deleteTodolist(elem_list_todo.id)">.</button>
                 </li>
             </ul>
@@ -63,11 +63,11 @@ export default {
                 if (this.connected) {
                     this.getUser({"token":this.getUserToken});
                     this.getUserTodolist({"token":this.getUserToken});
+                    this.getUserTodoInTodolist({"id":this.idTodoSelected,"token":this.getUserToken});
                 }
             },
             selectTodoList(elem){
                 this.idTodoSelected = elem;
-                console.log(this.idTodoSelected);
                 this.getUserTodoInTodolist({"id":this.idTodoSelected,"token":this.getUserToken});
             },
             createTodoList(){
@@ -90,7 +90,7 @@ export default {
                 this.deleteUserTodoInTodolist({"id":id,"token":this.getUserToken});
             },
             colorStyle(bool) {
-                return [ bool ? "color:green" : "color:red"];
+                return bool ? "color:green" : "color:red";
             },
             changeBool(todo){
                 todo.completed = todo.completed? false:true;
@@ -98,6 +98,7 @@ export default {
             },
             modifyTodoNameAction(todo){
                 this.modifyTodoInTodolist({"id":todo.id,"name":this.modifyTodoName,"completed":todo.completed?1:0,"todolistid":this.idTodoSelected,"token":this.getUserToken});
+                this.modifyTodoName='';
             }
         },
         computed: {
@@ -122,17 +123,20 @@ export default {
                 return [];
             },
             getTodotask(){
-                console.log(this.getAccountTodolistTask);
                 return this.getAccountTodolistTask;
+            },
+            iscompleted(todo){
+                return todo.completed==1?true:false;
             }
         }
     }
 </script>
 
 <style>
+.todo {padding: 5px; margin:2px; border: 1px solid black; padding: 7px; padding-left: 30px;padding-right: 30px; border-radius: 3px;}
+.todo:hover {background: linear-gradient(#e8e8e8 , #f1f1f1 , #e8e8e8 );}
 #Todo {width: 70%; margin: 0 auto;display:grid; grid-template-columns: 1fr 1fr;}
-#List_todo ul li{padding: 5px; margin:2px; border: 1px solid black; padding: 3px; border-radius: 3px;}
-#List_todo ul li:hover {background: linear-gradient(#e8e8e8 , #f1f1f1 , #e8e8e8 );}
+#List_todo ul li{margin:10px;}
 #List_task ul li{text-align: left;}
 #List_task input{margin-right: 30px}
 #List_todo {padding-right: 20px;}

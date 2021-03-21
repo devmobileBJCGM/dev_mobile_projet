@@ -3,7 +3,6 @@ export default function () {
         user: [],
         todolist: [],
         data: [],
-        todolisttask: [],
-        test: []
+        todolisttask: []
     }
 }
