@@ -14,7 +14,4 @@ export function getAccountData(state) {
     return state.data;
 }
 
-export function getAccountTest(state) {
-    return state.test;
-}
 
