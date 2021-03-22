@@ -1,39 +1,49 @@
 <template>
-    <h1>Bienvenue dans la list des Todos</h1>
+    <h1>Todolist</h1>
     <button @click.prevent="submit_getUserData">Recharger vos données</button>
     <p v-if="!connected">Vous devez vous connecter</p>
-    <p v-if="connected ">Bonjour {{user}}</p>
+    <p v-if="connected ">Vous êtes connecté {{user}}.</p>
     <div id="Todo" >
         <div id="List_todo">
             <ul>
                 <li v-for="elem_list_todo in getTodolist" :key="elem_list_todo.id"  >
                     <todolist class="todo" :id="elem_list_todo.id" :name="elem_list_todo.name" v-on:click="selectTodoList(elem_list_todo.id)"></todolist>
-                    <button
-                    <label>nb_à_faire</label> @click.prevent="deleteTodolist(elem_list_todo.id)">.</button>
+                    <button @click.prevent="deleteTodolist(elem_list_todo.id)">.</button>
                 </li>
             </ul>
-            <label for="newTodoListName">Todo liste : </label>
+            <label for="newTodoListName">Liste : </label>
             <input type="text" name="newTodoListName" v-model="newTodoListName">
-            <button @click.prevent="createTodoList">Add New Todo liste</button>
+            <button @click.prevent="createTodoList">Ajouter une liste</button>
         </div>
         <div id="List_task">
-                    <label>coche : à faire/fait</label>
+            <div id="filters">
+                <a id="filter1" href="#" :class="{selected: filter === 'all'}" @click.prevent="filter = 'all'">Toutes</a>
+                <a id="filter2" href="#" :class="{selected: filter === 'todo'}" @click.prevent="filter = 'todo'">A faire</a>
+                <a id="filter3" href="#" :class="{selected: filter === 'done'}" @click.prevent="filter = 'done'">Faites</a>
+            </div>
+            <br>
+            <input type="checkbox" v-on:change="allDone()" v-model="allDoneBool">
+            <span id="toggle_all" v-show="allDoneBool"> Tout déselectionner</span>
+            <span id="toggle_all" v-show="!allDoneBool"> Tout sélectionner</span>
+            <span id="tache_a_faire"><strong>{{remaining}}</strong> tâches à faire</span>
             <ul>
-                <li v-for="todo in getTodotask" :key="todo.id" :style="colorStyle(todo.completed)">
+                <li v-for="todo in filteredTodos" :key="todo.id" :style="colorStyle(todo.completed)">
                     <div>
                         <input type="checkbox" v-model="todo.completed" v-on:click="changeBool(todo)">
                         <button @click.prevent="deleteTodoElement(todo.id)">.</button>
                         <input type="text" name="modifyTodoName" v-model="modifyTodoName">
-                        <button @click.prevent="modifyTodoNameAction(todo)">change nom</button>
+                        <button @click.prevent="modifyTodoNameAction(todo)">Modifier tâche</button>
                         <listask :id="todo.id" :completed="todo.completed==1?true:false" :task="todo.name"></listask>
                     </div>
                 </li>
             </ul>
             <div v-if="this.idTodoSelected != -1">
-                <label for="newTodoName">Todo : </label>
+                <label for="newTodoName">Tâche : </label>
                 <input type="text" name="newTodoName" v-model="newTodoName">
-                <button @click.prevent="createTodo(this.idTodoSelected)">Add New Todo</button>
+                <button @click.prevent="createTodo(this.idTodoSelected)">Ajouter nouvelle tâche</button>
             </div>
+            <br>
+            <button @click.prevent="deleteCompleted">Supprimer les taches finies</button>
         </div>
     </div>
 </template>
@@ -56,7 +66,9 @@ export default {
                 newTodoListName: '',
                 newTodoName: '',
                 currentUser: '',
-                modifyTodoName: ''
+                modifyTodoName: '',
+                allDoneBool:false,
+                filter:'all'
             }
         },
         methods: {
@@ -101,6 +113,12 @@ export default {
             modifyTodoNameAction(todo){
                 this.modifyTodoInTodolist({"id":todo.id,"name":this.modifyTodoName,"completed":todo.completed?1:0,"todolistid":this.idTodoSelected,"token":this.getUserToken});
                 this.modifyTodoName='';
+            },
+            allDone(){
+                this.getTodotask.forEach(todo => todo.completed = this.allDoneBool);
+            },
+            deleteCompleted(){
+                this.getTodotask.filter(todo => todo.completed).forEach(todo => this.deleteTodoElement(todo.id));
             }
         },
         computed: {
@@ -120,7 +138,12 @@ export default {
             },
             filteredTodos() {
                 if (this.idTodoSelected != -1) {
-                    return this.list_todos[this.idTodoSelected]["todos"];
+                    if (this.filter === 'todo') {
+                        return this.getTodotask.filter(todo => !todo.completed)
+                    } else if (this.filter === 'done') {
+                        return this.getTodotask.filter(todo => todo.completed)
+                    }
+                    return this.getTodotask;
                 }
                 return [];
             },
@@ -129,6 +152,9 @@ export default {
             },
             iscompleted(todo){
                 return todo.completed==1?true:false;
+            },
+            remaining() {
+                return this.getTodotask.filter(todo => !todo.completed).length;
             }
         }
     }
@@ -143,5 +169,28 @@ export default {
 #List_task input{margin-right: 30px}
 #List_todo {padding-right: 20px;}
 #List_task {border-left: 3px solid black}
+#List_todo input{
+    margin-right: 30px;
+}
+#toggle_all{
+    padding-right: 10px;
+}
+#tache_a_faire{
+    padding-left: 10px;
+    border-left: 1px solid black;
+}
+#filter1{
+    padding-right: 10px;
+    border-right: 1px solid black;
+}
+#filter2{
+    padding-right: 10px;
+    padding-left: 10px;
+    border-right: 1px solid black;
+}
+#filter3{
+    padding-left: 10px;
+}
+
 
 </style>
