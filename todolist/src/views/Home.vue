@@ -8,7 +8,8 @@
             <ul>
                 <li v-for="elem_list_todo in getTodolist" :key="elem_list_todo.id"  >
                     <todolist class="todo" :id="elem_list_todo.id" :name="elem_list_todo.name" v-on:click="selectTodoList(elem_list_todo.id)"></todolist>
-                    <button @click.prevent="deleteTodolist(elem_list_todo.id)">.</button>
+                    <button
+                    <label>nb_à_faire</label> @click.prevent="deleteTodolist(elem_list_todo.id)">.</button>
                 </li>
             </ul>
             <label for="newTodoListName">Todo liste : </label>
@@ -16,6 +17,7 @@
             <button @click.prevent="createTodoList">Add New Todo liste</button>
         </div>
         <div id="List_task">
+                    <label>coche : à faire/fait</label>
             <ul>
                 <li v-for="todo in getTodotask" :key="todo.id" :style="colorStyle(todo.completed)">
                     <div>
