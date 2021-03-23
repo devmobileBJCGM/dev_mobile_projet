@@ -1,23 +1,28 @@
 <template>
+<div>
   <div>
-    <p v-if="!connected">Pas encore connecté</p>
-    <p v-if="connected">Déjà connecté</p>
+    <p  class="mt-6 text-center text-sm font-bold text-gray-900" v-if="!connected">Pas encore connecté</p>
+    <p class="mt-6 text-center text-sm font-bold text-gray-900" v-if="connected">Déjà connecté</p>
   </div>
-  <div id="connection" >
-    <label for="emailAdresse"> email : </label>
-    <input type="text" name="emailAdresse" v-model="emailAdresse">
-    <label for="password"> password : </label>
-    <input type="text" name="password" v-model="password">
-    <button @click.prevent="submit_login">Connexion</button>
+  <p v-bind:style="style" v-if="this.emailAdresse=='' && this.password==''"><b>Veuillez entrer votre adresse mail et votre mot de passe</b></p>
+  <div class="mt-5 space-y-4 px-96" id="connection" >
+    <label for="emailAdresse" class="sr-only"> email : </label>
+    <input class="w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address" type="text" name="emailAdresse" v-model="emailAdresse" @keyup.enter="submit_login">
+    <label for="password" class="sr-only" > password : </label>
+    <input class="w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password" type="password" name="password" v-model="password" @keyup.enter="submit_login">
+    <button  @click.prevent="submit_login" class="w-full py-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Connexion</button>
   </div>
-  <div v-if="connected">
-    <button @click.prevent="submit_logout">Deconnexion</button>
+  <div class="px-96" v-if="connected">
+    <button @click.prevent="submit_logout" class="mt-1 w-full py-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Déconnexion</button>
   </div>
-  <div id="signup">
-    <router-link to="/Create_account">Create an account</router-link>
+  <div class="px-96" id="signup">
+    <button class="w-full mt-1  py-2 text-sm font-medium rounded-md text-white bg-red-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" >
+    <router-link  to="/Create_account">Créer un compte</router-link>
+    </button>
   </div>
   tatatiti@tatatiti.com
   tatatatatitititi
+</div>
 </template>
 
 <script>
@@ -32,6 +37,7 @@ export default {
                 emailAdresse: '',
                 password: '',
                 name: '',
+                style: ''
             }
         },
         methods: {
@@ -42,6 +48,10 @@ export default {
                     this.emailAdresse = '';
                     this.password = '';
                 }
+                else  {
+                    this.style= 'color:red; font-size: larger;';
+            }
+
             },
             submit_logout(){
                 this.logout();

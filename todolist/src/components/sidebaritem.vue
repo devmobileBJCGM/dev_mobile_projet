@@ -1,7 +1,5 @@
 <template>
-    <p>id: {{ id }}, 
-    completed: {{ completed }}, 
-    task: {{ task }}</p>
+    <p class=" font-sans text-lg antialiased mr-3">{{ task }}</p>
 </template>
 
 <script>
@@ -12,7 +10,7 @@ export default {
         props:{
            id: {type: Number},
            completed: {type: Boolean},
-           task: {type: String}
+           task: {type: String},
         }
 }   
 </script>
